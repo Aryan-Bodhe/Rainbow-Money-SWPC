@@ -1,0 +1,7 @@
+{
+  "current_age": 30,
+  "expected_retirement_age": 58,
+  "expected_retirement_expenses": 60000,
+  "current_retirement_corpus": 300000,
+  "retirement_sip": 10000
+}

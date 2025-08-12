@@ -22,7 +22,6 @@ def build_composite_nav(portfolio: dict[str, float]) -> pd.DataFrame:
         
         df = pd.read_feather(path)
         df = curr_conv.convert_to_inr(nav_data=df)
-
         
         df = df[['Date', 'NAV_INR']].copy()
         df['NAV_INR'] *= weight

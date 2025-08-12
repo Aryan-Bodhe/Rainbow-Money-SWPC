@@ -7,12 +7,6 @@ from typing import List, Literal
 from utils.combine_navs import build_composite_nav
 from config.config import ENABLE_XIRR_DUMP
 
-# from source.Exceptions import (
-#     HistoricalDataTooLowError, 
-#     NeitherDataNorPathProvidedError, 
-#     XirrComputationFailedError, 
-#     InvalidReturnCalculationModeError
-# )
 
 class XirrCalculator:
     def __init__(self):
@@ -69,7 +63,6 @@ class XirrCalculator:
         """
         if df is None:
             if feather_path is None:
-                # raise ValueError("[ERROR] Must supply either `df` or `feather_path`.")
                 raise ValueError()
             df = pd.read_feather(feather_path)
 
@@ -83,10 +76,11 @@ class XirrCalculator:
             if not xirrs:
                 raise ValueError('Not enough data to compute returns.')
         
-        if ENABLE_XIRR_DUMP:
-            print(xirrs)
-
         series = pd.Series(xirrs)
+
+        if ENABLE_XIRR_DUMP:
+            series.to_csv('temp/xirr_dump.csv')
+           
         if mode == "median":
             return round(series.median(), 2)
         elif mode == "mean":
@@ -106,11 +100,7 @@ class XirrCalculator:
     ) -> float:
         composite_df = build_composite_nav(portfolio=portfolio)
 
-        composite_df.to_csv('temp.csv')
         if 'NAV_INR' not in composite_df.columns:
             raise ValueError("Input DataFrame must contain 'NAV_INR' column.")
 
-        return (self.compute_asset_rolling_xirr(time_horizon=time_horizon, df=composite_df, mode=mode) / 100)
-
-
-            
+        return self.compute_asset_rolling_xirr(time_horizon=time_horizon, df=composite_df, mode=mode) / 100

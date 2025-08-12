@@ -1,5 +1,6 @@
 from typing import Literal
 
+from models import SWPData
 from models.UserData import UserData
 from config.config import (
     ANNUAL_INFLATION_RATE,
@@ -19,90 +20,6 @@ from config.config import (
 class SWPCalculator:
     def __init__(self):
         self.user_data: UserData = None
-
-    # def run_swp_calculator(
-    #     self, 
-    #     user_data: UserData,
-    #     pre_retirement_return_rate: float = PRE_RETIREMENT_RETURN_RATE,
-    #     post_retirement_return_rate: float = POST_RETIREMENT_RETURN_RATE,
-    #     annual_inflation_rate: float = ANNUAL_INFLATION_RATE,
-    #     avg_life_expectancy: int = AVG_LIFE_EXPECTANCY,
-    #     mode: Literal['aggressive', 'conservative'] = 'aggressive'
-    # ) -> dict:
-    #     self.user_data = user_data
-        
-    #     future_val = self._compute_retirement_corpus_future_value(
-    #         user_data.retirement_savings_amt,
-    #         user_data.retirement_sip_amt,
-    #         pre_retirement_return_rate,
-    #         annual_inflation_rate,
-    #         user_data.current_age,
-    #         user_data.expected_retirement_age                
-    #     )
-    
-    #     target_corpus = self._compute_target_retirement_corpus(
-    #         user_data,
-    #         post_retirement_return_rate,
-    #         annual_inflation_rate,
-    #         avg_life_expectancy
-    #     )
-
-    #     if mode == 'conservative':
-    #         target_reserve = 0.2 * target_corpus
-    #         future_reserve = 0.2 * future_val
-    #         target_corpus -= target_reserve
-    #         future_val -= future_reserve
-    #         future_reserve_val = self._compute_retirement_corpus_future_value(
-    #             future_reserve,
-    #             0,
-    #             pre_retirement_return_rate,
-    #             annual_inflation_rate,
-    #             user_data.expected_retirement_age,
-    #             avg_life_expectancy,
-    #         )
-
-    #         target_reserve_val = self._compute_retirement_corpus_future_value(
-    #             target_reserve,
-    #             0,
-    #             pre_retirement_return_rate,
-    #             annual_inflation_rate,
-    #             user_data.expected_retirement_age,
-    #             avg_life_expectancy
-    #         )
-    
-    #     extra_sip_req = self._compute_required_sip_amt(
-    #         user_data, 
-    #         future_val, 
-    #         target_corpus,
-    #         pre_retirement_return_rate,
-    #         annual_inflation_rate
-    #     )
-        
-    #     current_manual_swp = self._compute_manual_uninvested_withdrawals(user_data, future_val)
-       
-    #     target_manual_swp = self._compute_manual_uninvested_withdrawals(user_data, target_corpus)
-
-    #     current_monthly_swp = self._compute_monthly_swp_amt(user_data, future_val, post_retirement_return_rate, avg_life_expectancy)
-      
-    #     # target_monthly_swp = self._compute_monthly_swp_amt(user_data, target_corpus, post_retirement_return_rate, avg_life_expectancy)
-    #     target_monthly_swp = self._compute_monthly_swp_amt_with_annual_inflation(user_data, target_corpus, post_retirement_return_rate, avg_life_expectancy, annual_inflation_rate)
-
-    #     schedule = self.month_end_corpus_schedule_with_annual_inflation(user_data, target_corpus, target_monthly_swp, post_retirement_return_rate, avg_life_expectancy, annual_inflation_rate)
-    #     with open("corpus_schedule.txt", "w") as f:
-    #         for month, balance in schedule:
-    #             f.write(f"Month {month:3d}: ₹{balance:,.2f}\n")
-
-    #     # print(schedule)
-        
-    #     return {
-    #         'current_corpus_future_value': future_val,
-    #         'ideal_target_corpus': target_corpus,
-    #         'extra_sip_required': extra_sip_req,
-    #         'manual_swp_current': current_manual_swp,
-    #         'manual_swp_target': target_manual_swp,
-    #         'safe_swp_current': current_monthly_swp,
-    #         'safe_swp_target': target_monthly_swp
-    #     }
 
     def run_swp_calculator(
         self, 
@@ -139,7 +56,6 @@ class SWPCalculator:
         annual_inflation_rate: float,
         reserve_threshold: float = 0.2
     ):
-        print('Running conservative analysis.')
         current_age: int = user_data.current_age
         retirement_age: int = user_data.expected_retirement_age
         expected_monthly_expense: float = user_data.expected_retirement_expenses
